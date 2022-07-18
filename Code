@@ -1,0 +1,48 @@
+
+<?php 
+##############################################
+
+// Install latest PHPMAILER first using this command line into your directory where you want to work with emails
+##############################################
+// composer require phpmailer/phpmailer
+##############################################
+
+// Import PHPMailer classes into the global namespace
+// These must be at the top of your script, not inside a function
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+// If necessary, modify the path in the require statement below to refer to the
+// location of your Composer autoload.php file.
+require './vendor/autoload.php';
+
+    $output = '';
+    $mail = new PHPMailer;
+    $mail->IsSMTP(); //Sets Mailer to send message using SMTP
+    $mail->SMTPDebug = 2; //Debug mode. Comment this for production mode 
+    $mail->CharSet = 'UTF-8';
+    $mail->Host = 'YOUR_EMAIL_HOST'; //Sets the SMTP hosts of your Email hosting, this for AWS
+    $mail->Port = '587'; //Sets the default SMTP server port
+    $mail->SMTPAuth = true;	//Sets SMTP authentication. Utilizes the Username and Password variables
+    $mail->Username = 'SMTP_USERNAME'; //Sets SMTP username
+    $mail->Password = 'SMTP_PASSWORD'; //Sets SMTP password
+    $mail->SMTPSecure = ''; //Sets connection prefix. Options are "", "ssl" or "tls"
+    $mail->From = 'VERIFIED_EMAIL_ID_ONLY'; //Sets the From email address for the message
+    $mail->FromName = 'YOUR_COMPANY_NAME'; //Sets the From name of the message
+    $mail->AddAddress('RECEIVER_EMAIL', 'RECEIVER_NAME'); //Adds a "To" address
+    $mail->IsHTML(true);//Sets message type to HTML
+    $mail->Subject = 'Test mail by HTML HINTS'; //Sets the Subject of the message
+    //An HTML or plain text message body
+    $mail->Body = '<p>Test</p>';
+    $mail->AltBody = '';
+
+    $result = $mail->Send();//Send an Email. Return true on success or false on error
+
+    if($result["code"] == '400')
+    {
+        $output .= html_entity_decode($result['full_error']);
+    }
+    else
+    {
+        echo $output;
+    }
+ ?>
